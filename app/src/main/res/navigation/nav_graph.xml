@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/placeListFragment"
+    android:id="@+id/nav_graph">
+
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="kg.kunduznbkva.oshguide.ui.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="kg.kunduznbkva.oshguide.ui.DetailFragment"
+        android:label="@string/detail_info"
+        tools:layout="@layout/fragment_detail" />
+    <fragment
+        android:id="@+id/placeListFragment"
+        android:name="kg.kunduznbkva.oshguide.ui.PlaceListFragment"
+        android:label="fragment_place_list"
+        tools:layout="@layout/fragment_place_list" >
+        <action
+            android:id="@+id/action_placeListFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+</navigation>
