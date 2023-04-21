@@ -6,15 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import kg.kunduznbkva.oshguide.R
 import kg.kunduznbkva.oshguide.adapters.OnItemClickListener
 import kg.kunduznbkva.oshguide.adapters.RecyclerAdapter
 import kg.kunduznbkva.oshguide.data.Place
-import kg.kunduznbkva.oshguide.databinding.FragmentMainBinding
+import kg.kunduznbkva.oshguide.databinding.FragmentPagerBinding
+import kg.kunduznbkva.oshguide.ui.DetailFragment.Companion.PLACE_OBJECT
 
-class MainFragment : Fragment(), OnItemClickListener {
-   private lateinit var binding: FragmentMainBinding
+class PagerFragment : Fragment(), OnItemClickListener {
+   private lateinit var binding: FragmentPagerBinding
    private lateinit var adapter: RecyclerAdapter
    private var list = ArrayList<Place>()
 
@@ -22,7 +22,7 @@ class MainFragment : Fragment(), OnItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMainBinding.inflate(layoutInflater,container,false)
+        binding = FragmentPagerBinding.inflate(layoutInflater,container,false)
         return binding.root
     }
 
@@ -45,10 +45,20 @@ class MainFragment : Fragment(), OnItemClickListener {
     }
 
     override fun onItemClick(pos: Int, item: Place) {
-        findNavController().navigate(R.id.detailFragment)
+        val bundle = Bundle()
+        bundle.putParcelable(PLACE_OBJECT,item)
+
+        val fragment = DetailFragment()
+        fragment.arguments = bundle
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.my_nav_host_fragment,fragment)
+            .commit()
     }
 
     companion object{
         const val ARG_OBJECT = "object"
     }
 }
+
+

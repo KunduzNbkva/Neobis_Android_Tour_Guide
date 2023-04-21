@@ -46,12 +46,13 @@ class PlaceListFragment : Fragment() {
         }.attach()
     }
 
-    fun initList(){
+    private fun initList(){
         tabNames = arrayOf(
             getString(R.string.restaurants),
             getString(R.string.fitness),
             getString(R.string.hostels),
         )
     }
+
 
 }

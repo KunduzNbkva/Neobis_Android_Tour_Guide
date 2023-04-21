@@ -3,40 +3,40 @@ package kg.kunduznbkva.oshguide.data
 
 import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Place(
     val name: String,
     val address: String,
     val work_time: String,
     val distance: String,
-    val img: Int
+    val img: Int,
+    val longitude: Double,
+    val latitude: Double
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
-        parcel.readInt()
+        parcel.readInt(),
+        parcel.readDouble(),
+        parcel.readDouble()
     )
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(name)
-        parcel.writeString(address)
-        parcel.writeString(work_time)
-        parcel.writeInt(img)
-    }
+    companion object : Parceler<Place> {
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Place> {
-        override fun createFromParcel(parcel: Parcel): Place {
-            return Place(parcel)
+        override fun Place.write(parcel: Parcel, flags: Int) {
+            parcel.writeString(name)
+            parcel.writeString(address)
+            parcel.writeString(work_time)
+            parcel.writeInt(img)
         }
 
-        override fun newArray(size: Int): Array<Place?> {
-            return arrayOfNulls(size)
+        override fun create(parcel: Parcel): Place {
+            return Place(parcel)
         }
     }
 }

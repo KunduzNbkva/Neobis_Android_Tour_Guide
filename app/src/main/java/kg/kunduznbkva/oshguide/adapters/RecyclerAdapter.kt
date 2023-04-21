@@ -29,7 +29,6 @@ class RecyclerAdapter(val itemClickListener: OnItemClickListener): RecyclerView.
         holder.bind(places!![position])
     }
 
-
     inner class ViewHolder(private val binding: ItemLayoutBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(place: Place) {
             binding.rvItemName.text = place.name
@@ -42,11 +41,6 @@ class RecyclerAdapter(val itemClickListener: OnItemClickListener): RecyclerView.
                 itemClickListener.onItemClick(adapterPosition,place)
             }
         }
-
-
-
-
-
     }
 }
 
