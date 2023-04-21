@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import kg.kunduznbkva.oshguide.R
@@ -43,9 +44,10 @@ class DetailFragment : Fragment() {
             detailAppbarImage.loadImage(place?.img!!)
             detailCollapsingToolbar.title = place.name
             detailToolbarDesc.text = place.address
+            detailAverageBillTxt.text = "Средний чек ${place.averageBill}"
             detailToolbar.navigationIcon = requireActivity().getDrawable(R.drawable.arrow_back)
             toolbarBackPress(detailToolbar)
-            openMap(detailToolbarDesc, place.name,place.latitude,place.longitude)
+            openMap(detailToolbarDesc,place.latitude,place.longitude)
         }
     }
 
@@ -58,22 +60,32 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun openMap(textView: TextView, name: String, latitude: Double, longitude: Double) {
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun openMap(textView: TextView, latitude: Double, longitude: Double) {
         textView.setOnClickListener {
-            val url = "waze://?ll=$latitude, $longitude&navigate=yes"
-            val intentWaze = Intent(Intent.ACTION_VIEW, Uri.parse(url)).setPackage("com.waze")
+            val location = Uri.parse("geo:0,0?q=$latitude,$longitude")
+            val mapIntent = Intent(Intent.ACTION_VIEW, location)
+            val activities = requireContext().packageManager.queryIntentActivities(mapIntent, 0)
 
-            val uriGoogle = "google.navigation:q=$latitude,$longitude"
-            val intentGoogleNav = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(uriGoogle)
-            ).setPackage(getString(R.string.google_maps_package))
+            if (activities.isNotEmpty()) {
+                // At least one app can handle the intent
+                startActivity(Intent.createChooser(mapIntent, "Choose an app"))
+            } else {
+                // No app can handle the intent
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setMessage("Please install an app that can handle maps")
+                    .setCancelable(false)
+                    .setPositiveButton("Install") { dialog, id ->
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=map&c=apps&hl=en&gl=US"))
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("Cancel") { dialog, id ->
+                        dialog.cancel()
+                    }
+                val alert = builder.create()
+                alert.show()
+            }
 
-            val chooserIntent = Intent.createChooser(intentGoogleNav, name)
-            val arr = arrayOfNulls<Intent>(1)
-            arr[0] = intentWaze
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arr)
-            requireContext().startActivity(chooserIntent)
         }
     }
 
